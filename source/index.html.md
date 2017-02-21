@@ -150,10 +150,14 @@ All valid responses sent by the API should contain the following keys, at least:
 
 ## Request Types
 
-* ping * upgrade
-* downgrade * create
+* ping 
+* upgrade
+* downgrade 
+* create
 * read
-* update * delete * subscribe
+* update 
+* delete 
+* subscribe
 * unsubscribe
 
 
