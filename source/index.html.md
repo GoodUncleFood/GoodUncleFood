@@ -143,6 +143,11 @@ All requests, to be considered valid, should be JSON object structures, containi
 
 All valid responses sent by the API should contain the following keys, at least:
 
+* session
+* request
+* response
+* passport
+
 
 ## Requests vs Responses
 
