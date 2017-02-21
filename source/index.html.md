@@ -172,7 +172,7 @@ If no message is received from the server for > ~3000 ms, the client should inte
 
 The API communicates entirely in JSON format. Any messages sent from a client that aren't valid JSON are ignored (though they do count towards keeping the connection open). Any messages received from the API that aren't valid JSON should be assumed to be nothing more than unicode characters sent by the API to let the client know the connection is still open.
 
-All requests, to be considered valid, should be JSON objects, containing at least a "type" key, and the value of that key should be a string one of the request-types listed in the "Request Types" section below. In many cases, (such as create, read, update, or delete types), other keys such as "topic" are required as well. More details about the keys required for each request-type can be found in following sections. 
+All requests, to be considered valid, should be JSON objects, containing at least a "type" key, and the value of that key should be (a string of) one of the request-types listed in the "Request Types" section below. In many cases, other keys, such as "topic" are required as well. More details about the keys required for each request-type can be found in following sections. 
 
 All valid responses sent by the API will contain the following keys, at least:
 
