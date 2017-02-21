@@ -9,7 +9,7 @@ toc_footers:
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
-  - errors
+  - request_types
 
 search: true
 ---
@@ -176,10 +176,13 @@ All requests, to be considered valid, should be JSON objects, containing at leas
 
 All valid responses sent by the API will contain the following keys, at least:
 
-* session // An object containing information about the session
-* request // An object containing information about the original request that triggered the response
-* response // An object containing information about the response
-* passport // An array of objects. Each object within this array represents a service or server that was involved in processing the request and the subsequent response. This array is used for debugging and analytics, and can be ignored by the client.
+
+Key | Value
+--- | -------
+session | An object containing information about the session
+request | An object containing information about the original request that triggered the response
+response | An object containing information about the response
+passport | An array of objects. Each object within this array represents a service or server that was involved in processing the request and the subsequent response. This array is used for debugging and analytics, and can be ignored by the client.
 
 
 ## Requests vs Responses
@@ -196,47 +199,30 @@ Responses are also not necessarily unique. This is particularly the case for res
 ## Request Types
 
 
-* upgrade:  Add a role to a session so that authenticated requests can be performed
-* downgrade : Remove a role from a session
-* create : Equivalent to POST in HTTP
-* read : Equivalent to GET in HTTP
-* update : Equivalent to PUT in HTTP
-* delete : Equivalent to DELETE in HTTP
-* subscribe : Get results for a query, and get all subsequent results for that query if anything changes about the result set.
-* unsubscribe : No longer receive subscriptions for a query.
+Type | Definition
+--- | -------
+upgrade |  Add a role to a session so that authenticated requests can be performed
+downgrade | Remove a role from a session
+create | Equivalent to POST in HTTP
+read | Equivalent to GET in HTTP
+update | Equivalent to PUT in HTTP
+delete | Equivalent to DELETE in HTTP
+subscribe | Get results for a query, and get all subsequent results for that query if anything changes about the result set.
+unsubscribe | No longer receive subscriptions for a query.
 
-See the #request-types section of these docs for more details about each request type.
+See the "request types" section of these docs for more details about each request type.
 
 ## Response Codes
 
 Within the response body, a 'response.code' key is always sent. That key will contain a single string, and that string will be one of the following:
 
-* ok : Your request was performed successfully.
-* forbidden : Your requests attempted to perform an action (or retrieve data) it was not authorized to perform/view.
-* not found : The item you requested could not be found.
-* bad request : There was an error with the structure of the request. You are missing fields or they contain invalid values. See the the 'response.errors' array for more details.
-* error : The system encountered an error while trying to process your request.
+Code | Definition
+--- | -------
+ok | Your request was performed successfully.
+forbidden | Your requests attempted to perform an action (or retrieve data) it was not authorized to perform/view.
+not found | The item you requested could not be found.
+bad request | There was an error with the structure of the request. You are missing fields or they contain invalid values. See the the 'response.errors' array for more details.
+slow down | You're being rate limited. Your connection will be ended by the server in the next few seconds if your request-rate continues.
+error | The system encountered an error while trying to process your request.
 
-
-# Upgrade
-
-The "upgrade" request type allows a client to add a role to a session, so that authenticated requests can be performed from that point forward.
-
-## Request Format
-
-## Response Format 
-
-# Downgrade
-
-# Create
-
-# Read
-
-# Update
-
-# Delete
-
-# Subscribe
-
-# Unsubscribe
 
