@@ -1,0 +1,76 @@
+<html>
+	<title>GU Websocket Example</title>
+<head>
+
+	<script> 
+
+		// Check if the browser supports Websockets
+		if (window.WebSocket){
+		     console.log("This browser supports websockets.");
+		} else {
+		     console.log("This browser does not support websockets.");
+		}
+
+		// Define the host
+	    var host = 'ws://staging.socket.gooduncle.com';
+
+	    // Establish a connection
+	    var ws = new WebSocket(host);
+
+	    // Bind to the onopen event if needed
+	    ws.onopen = function(e){
+	    	console.log('The socket is open');
+	    };
+
+	    // Bind to any errors experienes
+	    ws.onerror = function(e){
+	    	console.log('The socket is experiencing an error');
+	    };
+
+	    // Bind to the onclose event if needed 
+	    // Note: Dont depend on this method, its unreliable. 
+	    ws.onclose = function(e){
+	    	console.log('The socket is closed');
+	    };
+
+
+		// Send a single unicode character every 300ms
+		var _keepAlive = function(){
+			ws.send('`');
+		};
+		var foo = setInterval(_keepAlive, 300);
+
+		// Sample logic for detecting faulty connections
+		var lastReceivedMessage = Date.now();
+
+	    // Bind to the onmessage event
+		ws.onmessage = function(e) {
+		  console.log('Received message',e.data);
+		  lastReceivedMessage = Date.now();
+		 };
+		 
+		// Every second, check if the connection is faulty.
+		var _loop = function(){
+			var elapsed = Date.now() - lastReceivedMessage;
+			if(elapsed > 3000){
+				console.log("The connection is probably dead");
+			} else {
+				if(elapsed > 1000){
+					console.log("The connection is faulty");
+				} else {
+					console.log("Everythings fine");
+				}
+			}
+		};
+		var bar = setInterval(_loop, 1000);
+
+
+	</script>
+</head>
+<body>
+	<p>Open the inspector and view the console logs.</p>
+</body>
+</html>
+
+
+
