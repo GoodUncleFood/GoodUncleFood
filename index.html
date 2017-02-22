@@ -455,19 +455,557 @@ This API makes no attempt to conform to the ping-pong standards expressed in RFC
 </tr>
 </tbody></table>
 
+<aside class="warning">
+All requests (and subscriptions) made previous to the upgrade will continue to process with the roles that were active in the session at the time of the original request. 
+</aside> 
+
 <h2 id="downgrade">Downgrade</h2>
+
+<p>The &ldquo;downgrade&rdquo; request type allows a client to remove roles from a session, effectively downgrading the session to an anonymous/public one with no privileges.</p>
+
+<h3 id="request-format">Request Format</h3>
+<pre class="highlight javascript"><code>
+<span class="c1">// Build the data for the request</span>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'downgrade'</span>
+<span class="p">};</span>
+
+<span class="c1">// Send the request</span>
+<span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+</code></pre>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>true</td>
+<td>&ldquo;downgrade&rdquo;</td>
+</tr>
+</tbody></table>
+
+<h3 id="response-format">Response Format</h3>
+<pre class="highlight javascript"><code>
+<span class="c1">// Truncated Response Object</span>
+<span class="p">{</span>
+    <span class="s1">'session'</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="p">...</span>
+        <span class="s1">'roles'</span> <span class="p">:</span> <span class="p">[]</span> 
+    <span class="p">},</span>
+    <span class="s1">'response'</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="p">...</span>
+        <span class="s1">'code'</span> <span class="p">:</span> <span class="s1">'ok'</span><span class="p">,</span> 
+        <span class="p">...</span>
+    <span class="p">}</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</code></pre>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>session.roles</td>
+<td>This array is now empty, reflecting the removal of all roles.</td>
+</tr>
+<tr>
+<td>response.code</td>
+<td>If set to &ldquo;ok&rdquo;, the session downgrade was successful.</td>
+</tr>
+</tbody></table>
+
+<aside class="warning">
+All requests (and subscriptions) made previous to the downgrade will continue to process with the roles that were active in the session at the time of the original request. 
+</aside> 
 
 <h2 id="create">Create</h2>
 
+<p>The &ldquo;create&rdquo; request type allows a client to create a resource with specific characteristics, provided that the client&rsquo;s session has the role privilege necessary to do so. This request-type is analagous to the POST method in HTTP.</p>
+
+<h3 id="request-format">Request Format</h3>
+<pre class="highlight javascript"><code>
+<span class="c1">// Build the data for the request</span>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'create'</span><span class="p">,</span>
+  <span class="s1">'topic'</span> <span class="p">:</span> <span class="s1">'users'</span> <span class="c1">// An example of a topic</span>
+  <span class="s1">'params'</span> <span class="p">:</span> <span class="p">{...}</span>
+<span class="p">};</span>
+
+<span class="c1">// Send the request</span>
+<span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+</code></pre>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>true</td>
+<td>&ldquo;create&rdquo;</td>
+</tr>
+<tr>
+<td>topic</td>
+<td>string</td>
+<td>true</td>
+<td>The name of the topic that the request concerns.</td>
+</tr>
+<tr>
+<td>params</td>
+<td>object</td>
+<td>true</td>
+<td>An object containing zero or more key-value pairs of parameters related to the resource being created.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response-format">Response Format</h3>
+<pre class="highlight javascript"><code>
+<span class="c1">// Truncated Response Object</span>
+<span class="p">{</span>
+    <span class="s1">'response'</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="p">...</span>
+        <span class="s1">'code'</span> <span class="p">:</span> <span class="s1">'ok'</span><span class="p">,</span> 
+        <span class="s1">'payload'</span> <span class="p">:</span> <span class="p">{...}</span> 
+    <span class="p">}</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</code></pre>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>response.code</td>
+<td>If set to &ldquo;ok&rdquo;, the resource was created successfully.</td>
+</tr>
+<tr>
+<td>response.payload</td>
+<td>An object containing zero or more key-value pairs representing the resource created.</td>
+</tr>
+</tbody></table>
+
 <h2 id="read">Read</h2>
+
+<p>The &ldquo;read&rdquo; request type allows a client to retrieve a resource with specific characteristics, provided that the client&rsquo;s session has the role privilege necessary to do so. This request-type is analagous to the GET method in HTTP.</p>
+
+<h3 id="request-format">Request Format</h3>
+<pre class="highlight javascript"><code>
+<span class="c1">// Build the data for the request</span>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'read'</span><span class="p">,</span>
+  <span class="s1">'topic'</span> <span class="p">:</span> <span class="s1">'users'</span> <span class="c1">// An example of a topic</span>
+  <span class="s1">'criteria'</span> <span class="p">:</span> <span class="p">{...}</span>
+<span class="p">};</span>
+
+<span class="c1">// Send the request</span>
+<span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+</code></pre>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>true</td>
+<td>&ldquo;read&rdquo;</td>
+</tr>
+<tr>
+<td>topic</td>
+<td>string</td>
+<td>true</td>
+<td>The name of the topic that the request concerns.</td>
+</tr>
+<tr>
+<td>criteria</td>
+<td>object</td>
+<td>true</td>
+<td>An object containing zero or more key-value pairs that represent the criteria to filter resources on. The service will return all resources that match all criteria.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response-format">Response Format</h3>
+<pre class="highlight javascript"><code>
+<span class="c1">// Truncated Response Object</span>
+<span class="p">{</span>
+    <span class="s1">'response'</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="p">...</span>
+        <span class="s1">'code'</span> <span class="p">:</span> <span class="s1">'ok'</span><span class="p">,</span> 
+        <span class="s1">'payload'</span> <span class="p">:</span> <span class="p">{...}</span> 
+    <span class="p">}</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</code></pre>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>response.code</td>
+<td>If set to &ldquo;ok&rdquo;, one or more resources were retrieved successfully.</td>
+</tr>
+<tr>
+<td>response.payload</td>
+<td>An object containing zero or more key-value pairs representing one of the resources retrieved.</td>
+</tr>
+</tbody></table>
+
+<aside class="warning">
+A single &lsquo;read&rsquo; request may yield many response messages.
+</aside> 
 
 <h2 id="update">Update</h2>
 
+<p>The &ldquo;update&rdquo; request type allows a client to modify a resource (or resources) matching with specific characteristics, with new characteristics, provided that the client&rsquo;s session has the role privilege necessary to do so. This request-type is analagous to the PUT method in HTTP.</p>
+
+<h3 id="request-format">Request Format</h3>
+<pre class="highlight javascript"><code>
+<span class="c1">// Build the data for the request</span>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'read'</span><span class="p">,</span>
+  <span class="s1">'topic'</span> <span class="p">:</span> <span class="s1">'users'</span> <span class="c1">// An example of a topic</span>
+  <span class="s1">'criteria'</span> <span class="p">:</span> <span class="p">{...},</span>
+  <span class="s1">'params'</span> <span class="p">:</span> <span class="p">{...}</span>
+<span class="p">};</span>
+
+<span class="c1">// Send the request</span>
+<span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+</code></pre>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>true</td>
+<td>&ldquo;read&rdquo;</td>
+</tr>
+<tr>
+<td>topic</td>
+<td>string</td>
+<td>true</td>
+<td>The name of the topic that the request concerns.</td>
+</tr>
+<tr>
+<td>criteria</td>
+<td>object</td>
+<td>true</td>
+<td>An object containing zero or more key-value pairs that represent the criteria to filter resources on. The service will perform modifications on all resource that match all criteria.</td>
+</tr>
+<tr>
+<td>params</td>
+<td>object</td>
+<td>true</td>
+<td>An object containing zero or more key-value pairs of parameters that should be used to modify the objects that match the criteria.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response-format">Response Format</h3>
+<pre class="highlight javascript"><code>
+<span class="c1">// Truncated Response Object</span>
+<span class="p">{</span>
+    <span class="s1">'response'</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="p">...</span>
+        <span class="s1">'code'</span> <span class="p">:</span> <span class="s1">'ok'</span><span class="p">,</span> 
+        <span class="p">...</span>
+    <span class="p">}</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</code></pre>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>response.code</td>
+<td>If set to &ldquo;ok&rdquo;, one or more resources were modified successfully.</td>
+</tr>
+</tbody></table>
+
 <h2 id="delete">Delete</h2>
+
+<p>The &ldquo;delete&rdquo; request type allows a client to delete a resource with specific characteristics, provided that the client&rsquo;s session has the role privilege necessary to do so. This request-type is analagous to the DELETE method in HTTP.</p>
+
+<h3 id="request-format">Request Format</h3>
+<pre class="highlight javascript"><code>
+<span class="c1">// Build the data for the request</span>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'read'</span><span class="p">,</span>
+  <span class="s1">'topic'</span> <span class="p">:</span> <span class="s1">'users'</span> <span class="c1">// An example of a topic</span>
+  <span class="s1">'criteria'</span> <span class="p">:</span> <span class="p">{...}</span>
+<span class="p">};</span>
+
+<span class="c1">// Send the request</span>
+<span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+</code></pre>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>true</td>
+<td>&ldquo;read&rdquo;</td>
+</tr>
+<tr>
+<td>topic</td>
+<td>string</td>
+<td>true</td>
+<td>The name of the topic that the request concerns.</td>
+</tr>
+<tr>
+<td>criteria</td>
+<td>object</td>
+<td>true</td>
+<td>An object containing zero or more key-value pairs that represent the criteria to filter resources on. The service will delete all resources that match all criteria.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response-format">Response Format</h3>
+<pre class="highlight javascript"><code>
+<span class="c1">// Truncated Response Object</span>
+<span class="p">{</span>
+    <span class="s1">'response'</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="p">...</span>
+        <span class="s1">'code'</span> <span class="p">:</span> <span class="s1">'ok'</span><span class="p">,</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</code></pre>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>response.code</td>
+<td>If set to &ldquo;ok&rdquo;, one or more resources were deleted successfully.</td>
+</tr>
+</tbody></table>
 
 <h2 id="subscribe">Subscribe</h2>
 
+<p>The &ldquo;subscribe&rdquo; request type allows a client to subscribe to all resources with specific characteristics. The service will immediately return all matching resources that the session has the privileges to access, and will label them as an &ldquo;original match&rdquo;. It will subequently return all resources (that the session has the privileges to access) that match any of the conditions in the table below (and when returned, they will be labeled with the string in the &ldquo;Event&rdquo; column).</p>
+
+<table><thead>
+<tr>
+<th>Event</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>original match</td>
+<td>A resource matches the criteria the first time the query is ran.</td>
+</tr>
+<tr>
+<td>match created</td>
+<td>A resource is created that matches the criteria</td>
+</tr>
+<tr>
+<td>match added</td>
+<td>A resource that previously did not match the criteria now matches it</td>
+</tr>
+<tr>
+<td>match deleted</td>
+<td>A resource is deleted that previously matched the criteria</td>
+</tr>
+<tr>
+<td>match modified</td>
+<td>A resource that previously matched the criteria is modified, but still matches the criteria</td>
+</tr>
+<tr>
+<td>match dropped</td>
+<td>A resource that previously matched the criteria is modified and no longer matches the criteria</td>
+</tr>
+</tbody></table>
+
+<h3 id="request-format">Request Format</h3>
+<pre class="highlight javascript"><code>
+<span class="c1">// Build the data for the request</span>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'subscribe'</span><span class="p">,</span>
+  <span class="s1">'subscription'</span> <span class="p">:</span> <span class="s1">'10irf0ej0fq30'</span><span class="p">,</span> <span class="c1">// An example subscription id</span>
+  <span class="s1">'topic'</span> <span class="p">:</span> <span class="s1">'users'</span> <span class="c1">// An example of a topic</span>
+  <span class="s1">'criteria'</span> <span class="p">:</span> <span class="p">{...}</span>
+<span class="p">};</span>
+
+<span class="c1">// Send the request</span>
+<span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+</code></pre>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>true</td>
+<td>&ldquo;subscribe&rdquo;</td>
+</tr>
+<tr>
+<td>subscription</td>
+<td>string</td>
+<td>true</td>
+<td>A unique ID representing the id that should be assigned to this subscription. This ID will be namespaced to your session internally, so must only be unique to your session, not globally. If you provide a string that you&rsquo;ve previously used in this session, an error response will be returned.</td>
+</tr>
+<tr>
+<td>topic</td>
+<td>string</td>
+<td>true</td>
+<td>The name of the topic that the request concerns.</td>
+</tr>
+<tr>
+<td>criteria</td>
+<td>object</td>
+<td>true</td>
+<td>An object containing zero or more key-value pairs that represent the criteria to filter resources on.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response-format">Response Format</h3>
+<pre class="highlight javascript"><code>
+<span class="c1">// Truncated Response Object</span>
+<span class="p">{</span>
+    <span class="s1">'response'</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="p">...</span>
+        <span class="s1">'code'</span> <span class="p">:</span> <span class="s1">'ok'</span><span class="p">,</span> 
+        <span class="s1">'event'</span> <span class="p">:</span> <span class="s1">'original match'</span><span class="p">,</span>
+        <span class="s1">'payload'</span> <span class="p">:</span> <span class="p">{...}</span> 
+    <span class="p">}</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</code></pre>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>response.code</td>
+<td>If set to &ldquo;ok&rdquo;, one or more resources were retrieved successfully.</td>
+</tr>
+<tr>
+<td>response.event</td>
+<td>A string representing one of the events in the events-table.</td>
+</tr>
+<tr>
+<td>response.payload</td>
+<td>An object containing zero or more key-value pairs representing one of the resources retrieved.</td>
+</tr>
+</tbody></table>
+
+<aside class="warning">
+A single 'subscribe&rsquo; request may yield many response messages, and those responses may not be unique.
+</aside> 
+
 <h2 id="unsubscribe">Unsubscribe</h2>
+
+<p>The &ldquo;unsubscribe&rdquo; request type allows a client to cancel a subscription that has been previously created. </p>
+
+<h3 id="request-format">Request Format</h3>
+<pre class="highlight javascript"><code>
+<span class="c1">// Build the data for the request</span>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">'type'</span> <span class="p">:</span> <span class="s1">'unsubscribe'</span><span class="p">,</span>
+  <span class="s1">'subscription'</span> <span class="p">:</span> <span class="s1">'10irf0ej0fq30'</span><span class="p">,</span> <span class="c1">// An example subscription id</span>
+<span class="p">};</span>
+
+<span class="c1">// Send the request</span>
+<span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+</code></pre>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>true</td>
+<td>&ldquo;subscribe&rdquo;</td>
+</tr>
+<tr>
+<td>subscription</td>
+<td>string</td>
+<td>true</td>
+<td>The ID of the subscription that should be cancelled. This should be identical to the &#39;subscription&rsquo; key you provided when creating the subscription.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response-format">Response Format</h3>
+<pre class="highlight javascript"><code>
+<span class="c1">// Truncated Response Object</span>
+<span class="p">{</span>
+    <span class="s1">'response'</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="p">...</span>
+        <span class="s1">'code'</span> <span class="p">:</span> <span class="s1">'ok'</span>
+    <span class="p">}</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</code></pre>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>response.code</td>
+<td>If set to &ldquo;ok&rdquo;, the subscription was deleted.</td>
+</tr>
+</tbody></table>
+
+<aside class="warning">
+It may take several minutes (or longer) for an 'unsubscribe&rsquo; request to halt subscription-related responses from being returned. 
+</aside> 
 
       </div>
       <div class="dark-box">
