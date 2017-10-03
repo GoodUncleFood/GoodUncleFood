@@ -27,7 +27,7 @@ if (window.WebSocket){
 }
 ```
 
-Welcome to the Good Uncle Websocket API. The production and staging versions of this API can be at the following URLs:
+Welcome to the Good Uncle Websocket API (JPE). The production and staging versions of this API can be at the following URLs:
 
 * ws://socket.gooduncle.com
 * ws://staging.socket.gooduncle.com
